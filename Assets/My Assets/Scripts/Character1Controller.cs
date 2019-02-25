@@ -13,6 +13,9 @@ public class Character1Controller : MonoBehaviour
     public float dashCoolDown = 1f;
     public float acceleration_x = 200f; 
     public bool facingRight = true;
+
+    public bool isStun=false;
+
     public bool isJumping = false;
     public bool isWallJumping = false;
 
@@ -38,6 +41,13 @@ public class Character1Controller : MonoBehaviour
     float dashX=0;
     float dashY=0;
 
+    public bool isAiming = false;
+    public bool isSmashing = false;
+    public bool canBall = false;
+    public Transform ballCheck;
+    float ballRadius = 0.6f;
+    public LayerMask whatIsBall;
+
     public string horizontalStr = "Horizontal1";
     public string verticalStr = "Vertical1";
     public string jumpStr = "Jump1";
@@ -47,7 +57,8 @@ public class Character1Controller : MonoBehaviour
     public string playerStr = "Player1";
 
 
-    
+    public GameObject ball;
+    public Rigidbody2D ballrb;
     
 
     Animator anim;
@@ -62,6 +73,9 @@ public class Character1Controller : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
+
+        ball = GameObject.FindGameObjectWithTag("Ball");
+        ballrb = ball.GetComponent<Rigidbody2D>();
 
         playerLayer = LayerMask.NameToLayer(playerStr);
         platformLayer = LayerMask.NameToLayer("Plateform");
@@ -78,6 +92,9 @@ public class Character1Controller : MonoBehaviour
         walled = Physics2D.OverlapCircle(wallCheck.position, wallRadius, whatIsWall);
         anim.SetBool("Wall", walled);
 
+        canBall = Physics2D.OverlapCircle(ballCheck.position, ballRadius, whatIsBall);
+        anim.SetBool("Ball", canBall);
+
         //backWalled = Physics2D.OverlapCircle(backWallCheck.position, wallRadius, whatIsWall);
         //anim.SetBool("BackWall", backWalled);
 
@@ -88,23 +105,21 @@ public class Character1Controller : MonoBehaviour
         float moveY = Input.GetAxisRaw(verticalStr);
 
         
-        if (isDashing)
+        if (isDashing && !isStun)
         {
             dash();
         }
 
-        //else if (isHitting)
-        //  {public GameObject ball = GameObject.findWithTag("Ball")
-        //  ball.setSpeed()
 
-        else if (isWallJumping)
+
+        else if (isWallJumping && !isStun)
         {
             if (facingRight)
                 wallJump(1);
             else
                 wallJump(-1);
         }
-        else
+        else if (!isStun)
         {
             //Mouvement gauche droite
             anim.SetFloat("Speed", Mathf.Abs(moveX));
@@ -120,10 +135,10 @@ public class Character1Controller : MonoBehaviour
     void Update()
     {
         // jump
-        if (grounded && Input.GetButtonDown(jumpStr))
+        if (grounded && Input.GetButtonDown(jumpStr) && !isStun)
             jump();
 
-        if ( Input.GetButton(jumpStr) && isJumping)
+        if ( Input.GetButton(jumpStr) && isJumping && !isStun)
         {
             if (jumpTimeCounter > 0)
             {
@@ -139,27 +154,32 @@ public class Character1Controller : MonoBehaviour
 
         
         //wall jump
-        if (walled && Input.GetButtonDown(jumpStr) && !grounded)
+        if (walled && Input.GetButtonDown(jumpStr) && !grounded && !isStun)
             StartCoroutine("wallJumpRoutine");
 
         //backWall jump
-        if (backWalled && Input.GetButtonDown(jumpStr) && !grounded)
+        if (backWalled && Input.GetButtonDown(jumpStr) && !grounded && !isStun)
             StartCoroutine("wallJumpRoutine");
 
 
         //get down platform
-        if (Input.GetAxisRaw(verticalStr)<0)
+        if (Input.GetAxisRaw(verticalStr)<0 && !isStun)
             StartCoroutine("JumpOff");
 
         //dash
         bool dashButton = Input.GetButtonDown(dashStr);
-        if (dashButton && dashAvailable)
+        if (dashButton && dashAvailable && !isStun)
         {
             dashX = Input.GetAxisRaw(horizontalStr);
             dashY = Input.GetAxisRaw(verticalStr);
             StartCoroutine("dashRoutine");
         }
         
+        //smash
+        if (canBall && Input.GetButton(smashStr) && !isStun)
+        {
+            smash();
+        }
 
     }
 
@@ -217,6 +237,10 @@ public class Character1Controller : MonoBehaviour
             rigid.velocity = new Vector2(-dashSpeed, 0);
     }
 
+    void smash()
+    {
+        ballrb.velocity = new Vector2(jumpSpeed, jumpSpeed);
+    }
 
     //***************************************************************************************
     //************************************ COROUTINES ***************************************
@@ -235,6 +259,7 @@ public class Character1Controller : MonoBehaviour
     {
         isWallJumping = false;
         isJumping = false;
+        isAiming = false;
         
         isDashing = true;
         dashAvailable = false;
