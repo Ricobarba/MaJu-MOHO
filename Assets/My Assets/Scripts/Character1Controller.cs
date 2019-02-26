@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Character1Controller : MonoBehaviour
+// smash : pas d'inertie après un dash
 {
     public float fx;
     public float maxSpeed = 40f;
@@ -42,6 +43,13 @@ public class Character1Controller : MonoBehaviour
     float dashY=0;
 
     public bool isAiming = false;
+    public float aimX;
+    public float aimY;
+
+    public float smashSpeed = 10f;
+    public float smashCharge;
+    public float maxCharge = 0.5f;
+    
     public bool isSmashing = false;
     public bool canBall = false;
     public Transform ballCheck;
@@ -104,31 +112,53 @@ public class Character1Controller : MonoBehaviour
         float moveX = Input.GetAxisRaw(horizontalStr);
         float moveY = Input.GetAxisRaw(verticalStr);
 
-        
-        if (isDashing && !isStun)
+        isAiming = Input.GetButton(smashStr);
+
+
+        /// Stunned
+        if (isStun)
         {
-            dash();
-        }
-
-
-
-        else if (isWallJumping && !isStun)
-        {
-            if (facingRight)
-                wallJump(1);
-            else
-                wallJump(-1);
-        }
-        else if (!isStun)
-        {
-            //Mouvement gauche droite
-            anim.SetFloat("Speed", Mathf.Abs(moveX));
-            moveLeftRight(moveX);   
-        }
-
-        //frein
-        if (moveX == 0)
             brake();
+        }
+
+        // Hitting the ball
+        else if (isAiming)
+        {
+            rigid.AddForce(-6.5f * Physics2D.gravity * rigid.mass);
+            smashCharge += Time.deltaTime;
+            if (moveX > 0 && !facingRight)
+                Flip();
+            else if (moveX < 0 && facingRight)
+                Flip();
+        }
+
+        // Moving
+        else
+        {
+            if (isDashing)
+            {
+                dash();
+            }
+
+            else if (isWallJumping && !isStun)
+            {
+                if (facingRight)
+                    wallJump(1);
+                else
+                    wallJump(-1);
+            }
+            else if (!isStun)
+            {
+                //Mouvement gauche droite
+                anim.SetFloat("Speed", Mathf.Abs(moveX));
+                moveLeftRight(moveX);
+
+
+                //frein
+                if (moveX == 0)
+                    brake();
+            }
+        }
 
         //chute
         if (rigid.velocity.y < 0)
@@ -140,7 +170,7 @@ public class Character1Controller : MonoBehaviour
     void Update()
     {
         // jump
-        if (grounded && Input.GetButtonDown(jumpStr) && !isStun)
+        if (grounded && Input.GetButtonDown(jumpStr) && !isStun  && !isAiming)
             jump();
 
         if ( Input.GetButton(jumpStr) && isJumping && !isStun)
@@ -179,10 +209,21 @@ public class Character1Controller : MonoBehaviour
             dashY = Input.GetAxisRaw(verticalStr);
             StartCoroutine("dashRoutine");
         }
-        
+
         //smash
-        if (canBall && Input.GetButton(smashStr) && !isStun)
+        //preparing to smash
+        if (Input.GetButtonDown(smashStr) && !isStun)
         {
+            freeze();
+            smashCharge = 0;
+            isJumping = false;
+        }
+
+        //smashing
+        if (canBall && Input.GetButtonUp(smashStr) && !isStun)
+        {
+            aimX = Input.GetAxis(horizontalStr);
+            aimY = Input.GetAxis(verticalStr);
             smash();
         }
 
@@ -243,9 +284,23 @@ public class Character1Controller : MonoBehaviour
             rigid.velocity = new Vector2(-dashSpeed, 0);
     }
 
+    void freeze()
+    {
+        rigid.velocity = new Vector2(rigid.velocity.x * 0.1f, rigid.velocity.y * 0.1f);
+    }
+
     void smash()
     {
-        ballrb.velocity = new Vector2(jumpSpeed, jumpSpeed);
+        if (smashCharge > maxCharge)
+            smashCharge = 1;
+        else
+            smashCharge = smashCharge / maxCharge;
+        if (aimX != 0 || aimY != 0)
+            ballrb.velocity = new Vector2(smashCharge * smashSpeed * aimX / Mathf.Sqrt(aimX * aimX + aimY * aimY), smashCharge * smashSpeed * aimY / Mathf.Sqrt(aimX * aimX + aimY * aimY));
+        else if (facingRight)
+            ballrb.velocity = new Vector2(smashCharge * smashSpeed, 0);
+        else
+            ballrb.velocity = new Vector2(-smashCharge * smashSpeed, 0);
     }
 
     //***************************************************************************************
