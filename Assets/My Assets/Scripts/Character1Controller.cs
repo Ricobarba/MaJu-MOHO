@@ -5,7 +5,7 @@ using UnityEngine;
 public class Character1Controller : MonoBehaviour
 {
     public float fx;
-    public float maxSpeed = 60f;
+    public float maxSpeed = 40f;
     public float runSpeed = 12f;
     public float jumpSpeed = 13f;
     public float dashSpeed = 50f;
@@ -45,7 +45,7 @@ public class Character1Controller : MonoBehaviour
     public bool isSmashing = false;
     public bool canBall = false;
     public Transform ballCheck;
-    float ballRadius = 0.6f;
+    float ballRadius = 1.2f;
     public LayerMask whatIsBall;
 
     public string horizontalStr = "Horizontal1";
@@ -95,8 +95,8 @@ public class Character1Controller : MonoBehaviour
         canBall = Physics2D.OverlapCircle(ballCheck.position, ballRadius, whatIsBall);
         anim.SetBool("Ball", canBall);
 
-        //backWalled = Physics2D.OverlapCircle(backWallCheck.position, wallRadius, whatIsWall);
-        //anim.SetBool("BackWall", backWalled);
+        backWalled = Physics2D.OverlapCircle(backWallCheck.position, wallRadius, whatIsWall);
+        anim.SetBool("BackWall", backWalled);
 
         anim.SetFloat("vSpeed", rigid.velocity.y);
 
@@ -123,12 +123,17 @@ public class Character1Controller : MonoBehaviour
         {
             //Mouvement gauche droite
             anim.SetFloat("Speed", Mathf.Abs(moveX));
-            moveLeftRight(moveX);
+            moveLeftRight(moveX);   
+        }
 
+        //frein
+        if (moveX == 0)
+            brake();
 
-            //frein
-            if (moveX == 0)
-                brake();
+        //chute
+        if (rigid.velocity.y < 0)
+        {
+            rigid.velocity = new Vector2 (rigid.velocity.x, Mathf.Max (-maxSpeed, rigid.velocity.y)) ;
         }
     }
 
@@ -180,6 +185,7 @@ public class Character1Controller : MonoBehaviour
         {
             smash();
         }
+
 
     }
 
