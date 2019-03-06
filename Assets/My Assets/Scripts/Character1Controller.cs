@@ -46,7 +46,8 @@ public class Character1Controller : MonoBehaviour
     public float aimX;
     public float aimY;
 
-    public float smashSpeed = 10f;
+    public float smashSpeed = 25f;
+    public float smashMinSpeed = 10f;
     public float smashCharge;
     public float maxCharge = 0.5f;
     
@@ -82,8 +83,8 @@ public class Character1Controller : MonoBehaviour
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody2D>();
 
-        ball = GameObject.FindGameObjectWithTag("Ball");
-        ballrb = ball.GetComponent<Rigidbody2D>();
+        //ball = GameObject.FindGameObjectWithTag("Ball");
+        //ballrb = ball.GetComponent<Rigidbody2D>();
 
         playerLayer = LayerMask.NameToLayer(playerStr);
         platformLayer = LayerMask.NameToLayer("Plateform");
@@ -163,7 +164,7 @@ public class Character1Controller : MonoBehaviour
         //chute
         if (rigid.velocity.y < 0)
         {
-            rigid.velocity = new Vector2 (rigid.velocity.x, Mathf.Max (-maxSpeed, rigid.velocity.y)) ;
+            rigid.velocity = new Vector2 (rigid.velocity.x, Mathf.Max (-2*maxSpeed, rigid.velocity.y)) ;
         }
     }
 
@@ -224,7 +225,7 @@ public class Character1Controller : MonoBehaviour
         {
             aimX = Input.GetAxis(horizontalStr);
             aimY = Input.GetAxis(verticalStr);
-            smash();
+            //smash();
         }
 
 
@@ -289,14 +290,15 @@ public class Character1Controller : MonoBehaviour
         rigid.velocity = new Vector2(rigid.velocity.x * 0.1f, rigid.velocity.y * 0.1f);
     }
 
-    void smash()
+    public void smash(Rigidbody2D ballrb)
     {
         if (smashCharge > maxCharge)
             smashCharge = 1;
         else
             smashCharge = smashCharge / maxCharge;
         if (aimX != 0 || aimY != 0)
-            ballrb.velocity = new Vector2(smashCharge * smashSpeed * aimX / Mathf.Sqrt(aimX * aimX + aimY * aimY), smashCharge * smashSpeed * aimY / Mathf.Sqrt(aimX * aimX + aimY * aimY));
+            ballrb.velocity = new Vector2((smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimX / Mathf.Sqrt(aimX * aimX + aimY * aimY),
+                                          (smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimY / Mathf.Sqrt(aimX * aimX + aimY * aimY));
         else if (facingRight)
             ballrb.velocity = new Vector2(smashCharge * smashSpeed, 0);
         else
