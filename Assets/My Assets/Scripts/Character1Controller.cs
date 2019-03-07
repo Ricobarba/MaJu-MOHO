@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Character1Controller : MonoBehaviour
 // smash : pas d'inertie après un dash
+// Si choc pendant is charging pas de frein
 {
     public float fx;
     public float maxSpeed = 40f;
@@ -101,10 +102,8 @@ public class Character1Controller : MonoBehaviour
         anim.SetBool("Wall", walled);
 
         canBall = Physics2D.OverlapCircle(ballCheck.position, ballRadius, whatIsBall);
-        anim.SetBool("Ball", canBall);
 
         backWalled = Physics2D.OverlapCircle(backWallCheck.position, wallRadius, whatIsWall);
-        anim.SetBool("BackWall", backWalled);
 
         anim.SetFloat("vSpeed", rigid.velocity.y);
 
@@ -112,14 +111,13 @@ public class Character1Controller : MonoBehaviour
         float moveX = Input.GetAxisRaw(horizontalStr);
         float moveY = Input.GetAxisRaw(verticalStr);
 
-        isAiming = Input.GetButton(smashStr);
-
 
         /// Stunned
         if (isStun)
-        {
             brake();
-        }
+
+        else if (isDashing)
+            dash();
 
         // Hitting the ball
         else if (isAiming)
@@ -135,19 +133,14 @@ public class Character1Controller : MonoBehaviour
         // Moving
         else
         {
-            if (isDashing)
-            {
-                dash();
-            }
-
-            else if (isWallJumping && !isStun)
+            if (isWallJumping)
             {
                 if (facingRight)
                     wallJump(1);
                 else
                     wallJump(-1);
             }
-            else if (!isStun)
+            else
             {
                 //Mouvement gauche droite
                 anim.SetFloat("Speed", Mathf.Abs(moveX));
@@ -215,16 +208,21 @@ public class Character1Controller : MonoBehaviour
         if (Input.GetButtonDown(smashStr) && !isStun)
         {
             freeze();
+            isAiming = true;
             smashCharge = 0;
             isJumping = false;
         }
 
         //smashing
-        if (canBall && Input.GetButtonUp(smashStr) && !isStun)
+        if (Input.GetButtonUp(smashStr) && isAiming)
         {
-            aimX = Input.GetAxis(horizontalStr);
-            aimY = Input.GetAxis(verticalStr);
-            smash();
+            if (canBall && !isStun)
+            {
+                aimX = Input.GetAxis(horizontalStr);
+                aimY = Input.GetAxis(verticalStr);
+                smash();
+            }
+            isAiming = false;
         }
 
 
@@ -282,6 +280,7 @@ public class Character1Controller : MonoBehaviour
             rigid.velocity = new Vector2(dashSpeed, 0);
         else
             rigid.velocity = new Vector2(-dashSpeed, 0);
+        isAiming = false;
     }
 
     void freeze()
