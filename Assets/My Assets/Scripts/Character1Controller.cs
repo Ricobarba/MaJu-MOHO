@@ -5,6 +5,7 @@ using UnityEngine;
 public class Character1Controller : MonoBehaviour
 // smash : pas d'inertie après un dash
 // Si choc pendant is charging pas de frein
+// Commence à charger smash pendant stun --> ???
 {
     public float fx;
     public float maxSpeed = 40f;
@@ -51,6 +52,7 @@ public class Character1Controller : MonoBehaviour
     public float smashSpeed = 25f;
     public float smashCharge;
     public float maxCharge = 0.5f;
+    public float smashCooldown = 0.5f;
     
     public bool isSmashing = false;
     public bool canBall = false;
@@ -223,16 +225,17 @@ public class Character1Controller : MonoBehaviour
                 //smash();
             }*/
             isAiming = false;
+            StartCoroutine("getStunned", smashCooldown);
+        }
+    
+
         }
 
+        //***************************************************************************************
+        //************************************ METHODS ******************************************
+        //***************************************************************************************
 
-    }
-
-    //***************************************************************************************
-    //************************************ METHODS ******************************************
-    //***************************************************************************************
-
-    void Flip()
+        void Flip()
     {
         facingRight = !facingRight;
         Vector3 theScale = transform.localScale;
@@ -305,20 +308,21 @@ public class Character1Controller : MonoBehaviour
 
     public void smash(Rigidbody2D ballrb)
     {
-        aimX = Input.GetAxis(horizontalStr);
-        aimY = Input.GetAxis(verticalStr);
-        if (smashCharge > maxCharge)
-            smashCharge = 1;
-        else
-            smashCharge = smashCharge / maxCharge;
-        if (aimX != 0 || aimY != 0)
-            // /!\ Changer le signe de smashMinSpeed en fonction de l'orientation
-            ballrb.velocity = new Vector2((smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimX / Mathf.Sqrt(aimX * aimX + aimY * aimY),
+        if (isAiming)
+            aimX = Input.GetAxis(horizontalStr);
+            aimY = Input.GetAxis(verticalStr);
+            if (smashCharge > maxCharge)
+                smashCharge = 1;
+            else
+                smashCharge = smashCharge / maxCharge;
+            if (aimX != 0 || aimY != 0)
+                ballrb.velocity = new Vector2((smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimX / Mathf.Sqrt(aimX * aimX + aimY * aimY),
                                               (smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimY / Mathf.Sqrt(aimX * aimX + aimY * aimY));
-        else if (facingRight)
-            ballrb.velocity = new Vector2(smashCharge * smashSpeed, 0);
-        else
-            ballrb.velocity = new Vector2(-smashCharge * smashSpeed, 0);
+            else if (facingRight)
+                ballrb.velocity = new Vector2(smashMinSpeed + smashCharge * smashSpeed, 0);
+            else
+                ballrb.velocity = new Vector2(-smashMinSpeed + -smashCharge * smashSpeed, 0);
+        //isAiming = false;
     }
 
         //***************************************************************************************
@@ -360,6 +364,13 @@ public class Character1Controller : MonoBehaviour
         isWallJumping = true;
         yield return new WaitForSeconds(0.2f);
         isWallJumping = false;
+    }
+
+    public IEnumerator getStunned(float time)
+    {
+        isStun = true;
+        yield return new WaitForSeconds(time);
+        isStun = false;
     }
 
 }

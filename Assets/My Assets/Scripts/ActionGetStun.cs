@@ -10,7 +10,7 @@ public class ActionGetStun : ActionScript
     public Character1Controller charac;
 
     public float stunTime = 1f;
-    public float ballSpeedSquareMin = 900f;
+    public float ballSpeedMin = 30f;
 
     public GameObject ball;
     public Rigidbody2D ballrb;
@@ -39,11 +39,12 @@ public class ActionGetStun : ActionScript
 
                 ballSpeedSquare = ballSpeedX * ballSpeedX + ballSpeedY * ballSpeedY;
 
-                if (ev != null && !charac.isDashing && ballSpeedSquare>=ballSpeedSquareMin)
+                if (ev != null && !charac.isDashing && ballSpeedSquare>=(ballSpeedMin*ballSpeedMin))
                 {
-                    charac.isStun = true;
+                    /*charac.isStun = true;
                     yield return new WaitForSeconds(stunTime);
-                    charac.isStun = false;
+                    charac.isStun = false;*/
+                    StartCoroutine(charac.getStunned(stunTime));
                 }
                     
             }
