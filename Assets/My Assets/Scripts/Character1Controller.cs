@@ -47,7 +47,8 @@ public class Character1Controller : MonoBehaviour
     public float aimX;
     public float aimY;
 
-    public float smashSpeed = 10f;
+    public float smashMinSpeed = 10f;
+    public float smashSpeed = 25f;
     public float smashCharge;
     public float maxCharge = 0.5f;
     
@@ -104,8 +105,7 @@ public class Character1Controller : MonoBehaviour
         canBall = Physics2D.OverlapCircle(ballCheck.position, ballRadius, whatIsBall);
 
         backWalled = Physics2D.OverlapCircle(backWallCheck.position, wallRadius, whatIsWall);
-
-        anim.SetFloat("vSpeed", rigid.velocity.y);
+        
 
 
         float moveX = Input.GetAxisRaw(horizontalStr);
@@ -216,12 +216,12 @@ public class Character1Controller : MonoBehaviour
         //smashing
         if (Input.GetButtonUp(smashStr) && isAiming)
         {
-            if (canBall && !isStun)
+            /*if (canBall && !isStun)
             {
                 aimX = Input.GetAxis(horizontalStr);
                 aimY = Input.GetAxis(verticalStr);
-                smash();
-            }
+                //smash();
+            }*/
             isAiming = false;
         }
 
@@ -288,7 +288,7 @@ public class Character1Controller : MonoBehaviour
         rigid.velocity = new Vector2(rigid.velocity.x * 0.1f, rigid.velocity.y * 0.1f);
     }
 
-    void smash()
+    /*void smash()
     {
         if (smashCharge > maxCharge)
             smashCharge = 1;
@@ -301,12 +301,31 @@ public class Character1Controller : MonoBehaviour
         else
             ballrb.velocity = new Vector2(-smashCharge * smashSpeed, 0);
     }
+    */
 
-    //***************************************************************************************
-    //************************************ COROUTINES ***************************************
-    //***************************************************************************************
+    public void smash(Rigidbody2D ballrb)
+    {
+        aimX = Input.GetAxis(horizontalStr);
+        aimY = Input.GetAxis(verticalStr);
+        if (smashCharge > maxCharge)
+            smashCharge = 1;
+        else
+            smashCharge = smashCharge / maxCharge;
+        if (aimX != 0 || aimY != 0)
+            // /!\ Changer le signe de smashMinSpeed en fonction de l'orientation
+            ballrb.velocity = new Vector2((smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimX / Mathf.Sqrt(aimX * aimX + aimY * aimY),
+                                              (smashMinSpeed + smashCharge * (smashSpeed - smashMinSpeed)) * aimY / Mathf.Sqrt(aimX * aimX + aimY * aimY));
+        else if (facingRight)
+            ballrb.velocity = new Vector2(smashCharge * smashSpeed, 0);
+        else
+            ballrb.velocity = new Vector2(-smashCharge * smashSpeed, 0);
+    }
 
-    public IEnumerator JumpOff()
+        //***************************************************************************************
+        //************************************ COROUTINES ***************************************
+        //***************************************************************************************
+
+        public IEnumerator JumpOff()
     {
         //jumpingOff = true;
         Physics2D.IgnoreLayerCollision(playerLayer, platformLayer, true);
