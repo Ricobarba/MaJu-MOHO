@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ActionRestartScene : ActionScript
 {
+    public string side;
    
 
 
@@ -26,12 +27,18 @@ public class ActionRestartScene : ActionScript
     {
         if (_events != null)
         {
-            
+            if (side == "Left")
+                ++ScoreScript.leftScore;
+            else if (side == "Right")
+                ++ScoreScript.rightScore;
 
             foreach (var ev in _events)
             {
                 if (ev != null)
+                {
+                    
                     SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
+                }
             }
         }
         yield return null;
