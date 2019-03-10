@@ -2,27 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ScoreScript : MonoBehaviour
 {
-    public int score = 0;
+    public static int leftScore;
+    public static int rightScore;
 
-    public Text scoreText;
+    public Text leftScoreText;
+    public Text rightScoreText;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
-        scoreText.text = score.ToString();
+        //DontDestroyOnLoad(this.gameObject);
+        leftScoreText.text = leftScore.ToString();
+        rightScoreText.text = rightScore.ToString();
+
+        leftScoreText.transform.position = new Vector3(-23, 0, 0);
+        rightScoreText.transform.position = new Vector3(28, 0, 0);
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        
+        leftScoreText.text = leftScore.ToString();
+        rightScoreText.text = rightScore.ToString();
     }
 
-    public void increment()
+    public void addPoint(string side)
     {
-        score = score + 1;
+        if (side == "Left")
+            leftScore = leftScore + 1;
+        else if (side == "Right")
+            rightScore = rightScore + 1;
     }
 }
