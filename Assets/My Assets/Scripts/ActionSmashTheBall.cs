@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SmashTheBall : ActionScript
+public class ActionSmashTheBall : ActionScript
 {
     public Character1Controller charac;
 
