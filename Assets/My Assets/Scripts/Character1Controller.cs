@@ -68,6 +68,8 @@ public class Character1Controller : MonoBehaviour
     public string guardStr = "Guard1";
     public string playerStr = "Player1";
 
+    public string getStunnedStr = "GetStunned1";
+
 
     public GameObject ball;
     public Rigidbody2D ballrb;
@@ -193,7 +195,7 @@ public class Character1Controller : MonoBehaviour
 
 
         //get down platform
-        if (Input.GetAxisRaw(verticalStr)<0 && !isStun)
+        if (Input.GetAxisRaw(verticalStr)<0 && !isAiming && !isStun)
             StartCoroutine("JumpOff");
 
         //dash
@@ -227,9 +229,12 @@ public class Character1Controller : MonoBehaviour
             isAiming = false;
             StartCoroutine("getStunned", smashCooldown);
         }
-    
 
-        }
+        if (Input.GetButtonDown(getStunnedStr))
+            StartCoroutine("getStunned", 2f);
+
+
+    }
 
         //***************************************************************************************
         //************************************ METHODS ******************************************
@@ -369,6 +374,7 @@ public class Character1Controller : MonoBehaviour
     public IEnumerator getStunned(float time)
     {
         isStun = true;
+        isAiming = false;
         yield return new WaitForSeconds(time);
         isStun = false;
     }
