@@ -12,6 +12,10 @@ public class ScoreScript : MonoBehaviour
     public Text leftScoreText;
     public Text rightScoreText;
 
+    public Transform leftScorePosition;
+    public Transform rightScorePosition;
+
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -19,8 +23,10 @@ public class ScoreScript : MonoBehaviour
         leftScoreText.text = leftScore.ToString();
         rightScoreText.text = rightScore.ToString();
 
-        leftScoreText.transform.position = new Vector3(-23, 0, 0);
-        rightScoreText.transform.position = new Vector3(28, 0, 0);
+        //leftScoreText.transform.position = new Vector3(28, 0, 0);
+        //rightScoreText.transform.position = new Vector3(-23, 0, 0);
+        leftScoreText.transform.position = leftScorePosition.position;
+        rightScoreText.transform.position = rightScorePosition.position;
     }
 
 
