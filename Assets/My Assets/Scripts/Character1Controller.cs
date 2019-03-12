@@ -328,7 +328,6 @@ public class Character1Controller : MonoBehaviour
                 ballrb.velocity = new Vector2(smashMinSpeed + smashCharge * smashSpeed, 0);
             else
                 ballrb.velocity = new Vector2(-smashMinSpeed + -smashCharge * smashSpeed, 0);
-            //isAiming = false;
         }
     }
 
