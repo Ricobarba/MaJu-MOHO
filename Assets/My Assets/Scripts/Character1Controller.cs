@@ -314,6 +314,7 @@ public class Character1Controller : MonoBehaviour
     public void smash(Rigidbody2D ballrb)
     {
         if (isAiming)
+        {
             aimX = Input.GetAxis(horizontalStr);
             aimY = Input.GetAxis(verticalStr);
             if (smashCharge > maxCharge)
@@ -327,7 +328,7 @@ public class Character1Controller : MonoBehaviour
                 ballrb.velocity = new Vector2(smashMinSpeed + smashCharge * smashSpeed, 0);
             else
                 ballrb.velocity = new Vector2(-smashMinSpeed + -smashCharge * smashSpeed, 0);
-        //isAiming = false;
+        }
     }
 
         //***************************************************************************************

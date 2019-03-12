@@ -18,7 +18,7 @@ public class ActionSmashTheBall : ActionScript
                 if (bumpedRigidbody != null && !bumpedRigidbody.isKinematic)
                 {
                     yield return new WaitForFixedUpdate();
-                    if (Input.GetButtonUp("Smash1"))
+                    if (Input.GetButtonUp(charac.smashStr))
                     {
                         //bumpedRigidbody.velocity = new Vector2(10f, charac.smashSpeed);
                         charac.smash(bumpedRigidbody);
