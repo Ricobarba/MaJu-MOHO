@@ -630,6 +630,21 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5080286840068562431, guid: 230524161e1bc034181880113f87d290,
+        type: 3}
+      propertyPath: orthographic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080286840068562431, guid: 230524161e1bc034181880113f87d290,
+        type: 3}
+      propertyPath: near clip plane
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5080286840068562431, guid: 230524161e1bc034181880113f87d290,
+        type: 3}
+      propertyPath: orthographic size
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5080286840068562428, guid: 230524161e1bc034181880113f87d290,
         type: 3}
       propertyPath: m_LocalPosition.x
