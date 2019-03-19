@@ -586,10 +586,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 2
-  cloudProjectId: 
+  cloudProjectId: 64c37cd1-2199-4860-9917-7c5ad471ec36
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: first 2D game (1)
+  organizationId: la-coloc
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
