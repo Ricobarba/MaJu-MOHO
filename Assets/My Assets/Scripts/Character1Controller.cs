@@ -186,11 +186,11 @@ public class Character1Controller : MonoBehaviour
 
         
         //wall jump
-        if (walled && Input.GetButtonDown(jumpStr) && !grounded && !isStun)
+        if (walled && Input.GetButtonDown(jumpStr) && !grounded && !isAiming && !isStun)
             StartCoroutine("wallJumpRoutine");
 
         //backWall jump
-        if (backWalled && Input.GetButtonDown(jumpStr) && !grounded && !isStun)
+        if (backWalled && Input.GetButtonDown(jumpStr) && !grounded && !isAiming && !isStun)
             StartCoroutine("wallJumpRoutine");
 
 

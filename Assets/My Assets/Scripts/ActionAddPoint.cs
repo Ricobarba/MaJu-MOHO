@@ -12,6 +12,7 @@ public class ActionAddPoint : ActionScript
     {
         if (_events != null)
         {
+            TimeScript.flow = false;
             if (side == "Left")
                 ++ScoreScript.leftScore;
             else if (side == "Right")
