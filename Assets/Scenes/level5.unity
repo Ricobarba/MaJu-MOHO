@@ -1949,6 +1949,10 @@ PrefabInstance:
       propertyPath: playerStr
       value: Player2
       objectReference: {fileID: 0}
+    - target: {fileID: 1457355590, guid: 5eca0f4def380e643a2177418c4d5ded, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 871563932381751262, guid: 5eca0f4def380e643a2177418c4d5ded,
         type: 3}
       propertyPath: m_Layer
@@ -1973,10 +1977,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 1457355590, guid: 5eca0f4def380e643a2177418c4d5ded, type: 3}
-      propertyPath: m_Layer
-      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5eca0f4def380e643a2177418c4d5ded, type: 3}
@@ -2751,7 +2751,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67bc486acfb9b9e44a2bcfbd4f314a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  show: 0
+  maxSecond: 0
+  maxMinute: 2
+  possibleCharacters:
+  - {fileID: 2019168889, guid: 1bad349670649e041993d6c3a18b574c, type: 3}
+  - {fileID: 1452518811, guid: 11a1fa5bf365023478e2604dc804b270, type: 3}
+  - {fileID: 405457721, guid: 5eca0f4def380e643a2177418c4d5ded, type: 3}
+  selected: 1
+  player1: {fileID: 0}
   timeText: {fileID: 962846178}
   timePosition: {fileID: 285700876}
 --- !u!1001 &1818921421
@@ -3645,6 +3652,7 @@ MonoBehaviour:
   _repeatTimeBounded: 0
   _oneAtATime: 1
   _registerTime: 1
+  maxScore: 2
 --- !u!4 &623982776138909458
 Transform:
   m_ObjectHideFlags: 0
@@ -3730,6 +3738,7 @@ MonoBehaviour:
   _repeatTimeBounded: 0
   _oneAtATime: 1
   _registerTime: 1
+  maxScore: 2
 --- !u!1001 &623982776155438444
 PrefabInstance:
   m_ObjectHideFlags: 0

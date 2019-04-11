@@ -1,23 +1,37 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 public class ActionRestartScene : ActionScript
 {
-    
+    public int maxScore = 2;
     public override IEnumerator DoActionOnEvent(MonoBehaviour sender, GameObject args)
     {
         if (_events != null)
         {
-            foreach (var ev in _events)
+            if (ScoreScript.leftScore == maxScore)
             {
-                if (ev != null)
-                {
-                    SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
-                }
+                ScoreScript.leftScore = 0;
+                ScoreScript.rightScore = 0;
+                TimeScript.minute = 0;
+                TimeScript.second = 0;
+                TimeScript.flow = false;
+                SceneManager.LoadScene("FirstMenu");
             }
+            else if (ScoreScript.rightScore == maxScore)
+            {
+                ScoreScript.leftScore = 0;
+                ScoreScript.rightScore = 0;
+                TimeScript.minute = 0;
+                TimeScript.second = 0;
+                TimeScript.flow = false;
+                SceneManager.LoadScene("FirstMenu");
+            }
+            else
+                SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
         }
         yield return null;
     

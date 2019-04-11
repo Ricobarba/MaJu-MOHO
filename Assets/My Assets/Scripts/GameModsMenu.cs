@@ -8,6 +8,7 @@ public class GameModsMenu : MonoBehaviour
     public void versusGame()
     {
         SceneManager.LoadScene("level5");
+        TimeScript.flow = true;
     }
 
 }
