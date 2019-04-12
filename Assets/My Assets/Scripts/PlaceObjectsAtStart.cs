@@ -34,9 +34,7 @@ public class PlaceObjectsAtStart : MonoBehaviour
 
             int k;
             k = rand.Next(N);
-            // _targetGameObject.transform.position = _teleportTransform.position;
             target.transform.position = this._teleportTransforms[numberTable[k]].position;
-
             numberTable.RemoveAt(k);
         }
     }
