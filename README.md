@@ -27,7 +27,7 @@ The major coding part is focused on the main character behavior (move, animation
 interractions). I wanted to create the game "from scratch". So I designed my own character, 
 introduced collider, rigid body, wall and ground detection zones. I put some platforms, and
 learned how to use inputs to make the character move, jump, dash, jump-off. All those actions 
-are developped in the "character1Controller" sript.
+are developped in the "character1Controller" script.
 
 Then, I added the ball, implemented various functions "aim", and "Smatch" that allow the 
 player floating in the air while charging a shoot. 
